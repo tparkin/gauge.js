@@ -186,6 +186,12 @@
       return this.textField = textField instanceof TextRenderer ? textField : new TextRenderer(textField);
     };
 
+		BaseGauge.prototype.setFormat = function(formatFunc) {
+			if(this.textField instanceof TextRenderer) {
+				this.textField.setFormat(formatFunc);
+			}
+		};
+
     BaseGauge.prototype.setMinValue = function(minValue, updateStartValue) {
       var gauge, _i, _len, _ref1, _results;
       this.minValue = minValue;
@@ -249,10 +255,17 @@
   TextRenderer = (function() {
     function TextRenderer(el) {
       this.el = el;
+			this.formatFunc = function(value) {
+				return formatNumber(value);
+			}
     }
 
+		function setFormat(formatFunc) {
+			this.formatFunc = formatFunc;
+		}
+
     TextRenderer.prototype.render = function(gauge) {
-      return this.el.innerHTML = formatNumber(gauge.displayedValue);
+      return this.el.innerHTML = this.formatFunc(gauge.displayedValue);
     };
 
     return TextRenderer;
